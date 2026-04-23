@@ -11,6 +11,7 @@ from fastapi.responses import RedirectResponse
 import os
 from pathlib import Path
 
+
 app = FastAPI(title="Mergington High School API",
               description="API for viewing and signing up for extracurricular activities")
 
@@ -39,6 +40,43 @@ activities = {
         "max_participants": 30,
         "participants": ["john@mergington.edu", "olivia@mergington.edu"]
     }
+,
+    "Basketball": {
+        "description": "Team basketball practice and games",
+        "schedule": "Mondays and Wednesdays, 4:00 PM - 5:30 PM",
+        "max_participants": 15,
+        "participants": ["james@mergington.edu"]
+    },
+    "Soccer": {
+        "description": "Competitive soccer team for all skill levels",
+        "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
+        "max_participants": 22,
+        "participants": ["alex@mergington.edu", "sam@mergington.edu"]
+    },
+    "Art Club": {
+        "description": "Explore various art mediums including painting and sculpture",
+        "schedule": "Wednesdays, 3:30 PM - 5:00 PM",
+        "max_participants": 18,
+        "participants": ["isabella@mergington.edu"]
+    },
+    "Music Band": {
+        "description": "Join the school band and perform at concerts",
+        "schedule": "Mondays and Thursdays, 3:30 PM - 4:30 PM",
+        "max_participants": 25,
+        "participants": ["noah@mergington.edu", "ava@mergington.edu"]
+    },
+    "Debate Club": {
+        "description": "Develop public speaking and critical thinking skills",
+        "schedule": "Fridays, 3:30 PM - 4:30 PM",
+        "max_participants": 20,
+        "participants": ["lucas@mergington.edu"]
+    },
+    "Math Olympiad": {
+        "description": "Advanced math problem-solving and competition preparation",
+        "schedule": "Saturdays, 10:00 AM - 12:00 PM",
+        "max_participants": 16,
+        "participants": ["zoe@mergington.edu", "ethan@mergington.edu"]
+    }
 }
 
 
@@ -61,6 +99,11 @@ def signup_for_activity(activity_name: str, email: str):
 
     # Get the specific activity
     activity = activities[activity_name]
+
+    # Validate student is not already signed up
+    if email in activity["participants"]:
+        raise HTTPException(
+            status_code=400, detail="Student already signed up")
 
     # Add student
     activity["participants"].append(email)
